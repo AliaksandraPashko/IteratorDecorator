@@ -1,5 +1,21 @@
+#include <iterator>
+
+template <class Category, class IteratorType, class Distance = ptrdiff_t,
+	class Pointer = IteratorType * , class Reference = IteratorType & >
+
+	struct Iterator {
+
+	typedef IteratorType value_type;
+	typedef Distance  difference_type;
+	typedef Pointer   pointer;
+	typedef Reference reference;
+	typedef Category  iterator_category;
+
+};
+
+
 template<typename FilterFunc, typename IteratorType>
-class IteratorDecorator
+class IteratorDecorator : public Iterator<std::forward_iterator_tag, IteratorType> 
 {
 	FilterFunc filter_ = 0;
 	IteratorType current_ = nullptr;
@@ -29,6 +45,8 @@ public:
 
 	IteratorDecorator& operator ++()
 	{	
+		if (current_ == end_)
+			return *this;
 		next_element();
 		return *this;
 	}
